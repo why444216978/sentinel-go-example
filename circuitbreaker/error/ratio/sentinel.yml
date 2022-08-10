@@ -1,0 +1,14 @@
+version: "v1"
+sentinel:
+  app:
+    name: sentinel-go-demo
+    type: 0
+  log:
+    dir: "./logs"
+    usePid: false
+  stat:
+    system:
+      collectIntervalMs: 1000
+      collectLoadIntervalMs: 1000
+      collectCpuIntervalMs: 1000
+      collectMemoryIntervalMs: 1000
