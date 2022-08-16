@@ -1,7 +1,7 @@
 version: "v1"
 sentinel:
   app:
-    name: "sentinel-go-demo"
+    name: sentinel-go-demo
     type: 0
   exporter:
     metric:
@@ -12,7 +12,8 @@ sentinel:
     usePid: false
   stat:
     system:
-      collectIntervalMs: 1000
+      # use mock memory usage to replace actual memory usage, so close memory collector
+      collectIntervalMs: 0
       collectLoadIntervalMs: 1000
       collectCpuIntervalMs: 1000
-      collectMemoryIntervalMs: 1000
+      collectMemoryIntervalMs: 0

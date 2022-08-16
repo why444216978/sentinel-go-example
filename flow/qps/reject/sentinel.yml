@@ -3,6 +3,10 @@ sentinel:
   app:
     name: sentinel-go-demo
     type: 0
+  exporter:
+    metric:
+      http_addr: ":8888"
+      http_path: "/metrics"
   log:
     dir: "./logs"
     usePid: false

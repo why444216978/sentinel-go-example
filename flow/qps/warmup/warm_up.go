@@ -11,27 +11,24 @@ import (
 	"github.com/alibaba/sentinel-golang/util"
 )
 
-const resName = "flow-qps-reject"
+const resName = "flow-qps-warm-up"
 
+// warm up doc https://github.com/alibaba/Sentinel/wiki/%E9%99%90%E6%B5%81---%E5%86%B7%E5%90%AF%E5%8A%A8
 func main() {
-	// config https://sentinelguard.io/zh-cn/docs/golang/general-configuration.html
-	// conf := config.NewDefaultConfig()
-	// conf.Sentinel.Log.Logger = logging.NewConsoleLogger()
-	// err := sentinel.InitWithConfig(conf)
 	err := sentinel.InitWithConfigFile("./sentinel.yml")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// 配置一条限流规则 https://sentinelguard.io/zh-cn/docs/golang/flow-control.html
-	// 可以通过动态文件、etcd、consul 等配置中心来动态地配置规则。
 	_, err = flow.LoadRules([]*flow.Rule{
 		{
 			Resource:               resName,
 			Threshold:              10,
-			TokenCalculateStrategy: flow.Direct,
+			TokenCalculateStrategy: flow.WarmUp,
 			ControlBehavior:        flow.Reject,
 			StatIntervalInMs:       1000, // 1000ms is QPS
+			WarmUpPeriodSec:        10,   // 预热时间
+			WarmUpColdFactor:       3,    // 预热因子，默认是 3
 		},
 	})
 	if err != nil {

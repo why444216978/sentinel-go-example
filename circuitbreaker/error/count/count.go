@@ -12,6 +12,8 @@ import (
 	"github.com/alibaba/sentinel-golang/util"
 )
 
+const resName = "circuit-breaker-error-count"
+
 type stateChangeTestListener struct{}
 
 func (s *stateChangeTestListener) OnTransformToClosed(prev circuitbreaker.State, rule circuitbreaker.Rule) {
@@ -27,13 +29,7 @@ func (s *stateChangeTestListener) OnTransformToHalfOpen(prev circuitbreaker.Stat
 }
 
 func main() {
-	// conf := config.NewDefaultConfig()
-	// conf.Sentinel.Log.Logger = logging.NewConsoleLogger()
-	// err := sentinel.InitWithConfig(conf)
 	err := sentinel.InitWithConfigFile("./sentinel.yml")
-	if err != nil {
-		log.Fatal(err)
-	}
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,7 +39,7 @@ func main() {
 
 	_, err = circuitbreaker.LoadRules([]*circuitbreaker.Rule{
 		{
-			Resource:                     "abc",
+			Resource:                     resName,
 			Strategy:                     circuitbreaker.ErrorCount,
 			RetryTimeoutMs:               3000,  // 熔断后3s内，请求快速失败
 			MinRequestAmount:             10,    // 静默数量，若当前统计周期内的请求数小于此值，即使达到熔断条件规则也不会触发
@@ -64,7 +60,7 @@ func main() {
 
 func handle() {
 	for {
-		e, b := sentinel.Entry("abc")
+		e, b := sentinel.Entry(resName)
 		if b != nil {
 			fmt.Println("blocked")
 		} else {
