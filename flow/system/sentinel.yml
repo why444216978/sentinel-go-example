@@ -1,0 +1,19 @@
+version: "v1"
+sentinel:
+  app:
+    name: sentinel-go-demo
+    type: 0
+  exporter:
+    metric:
+      http_addr: ":7777"
+      http_path: "/metrics"
+  log:
+    dir: "./logs"
+    usePid: false
+  stat:
+    system:
+      # use mock memory usage to replace actual memory usage, so close memory collector
+      collectIntervalMs: 0
+      collectLoadIntervalMs: 1000
+      collectCpuIntervalMs: 1000
+      collectMemoryIntervalMs: 0
